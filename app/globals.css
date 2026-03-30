@@ -1,5 +1,5 @@
-@import 'modern-normalize';
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import "modern-normalize";
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap");
 
 * {
   box-sizing: border-box;
@@ -10,7 +10,7 @@ html {
 }
 
 body {
-  font-family: 'Montserrat', sans-serif;
+  font-family: var(--font-montserrat), sans-serif;
   background-color: #fff2ec;
   color: #0d0b0a;
   word-break: break-word;
@@ -20,6 +20,10 @@ body {
   min-height: 100vh;
   line-height: 1.5;
   font-size: 16px;
+}
+
+body * {
+  font-family: var(--font-montserrat), sans-serif;
 }
 
 ul,
@@ -45,12 +49,14 @@ a {
   border-radius: 6px;
   padding: 0px 8px;
   background-color: none;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
-              opacity 250ms cubic-bezier(0.4, 0, 0.2, 1),
-              border 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    background-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 250ms cubic-bezier(0.4, 0, 0.2, 1),
+    border 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-a:hover, a:focus {
+a:hover,
+a:focus {
   cursor: pointer;
   border: 1px solid #000;
 }
@@ -101,24 +107,26 @@ button:disabled {
   background-color: #cc6534;
   border: 1px solid #cc6534;
   color: #fff;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
-              border 250ms cubic-bezier(0.4, 0, 0.2, 1),
-              color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    background-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
+    border 250ms cubic-bezier(0.4, 0, 0.2, 1),
+    color 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 .primary-btn:hover,
 .primary-btn:focus {
+
   background-color: #ffe5d9;
   border: 1px solid #cc6534;
   color: #1b391b;
-}
 
 .secondary-btn {
   background-color: rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(0, 0, 0, 0.15);
   color: #1b391b;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
-              border 250ms cubic-bezier(0.4, 0, 0.2, 1),
-              color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    background-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
+    border 250ms cubic-bezier(0.4, 0, 0.2, 1),
+    color 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 .secondary-btn:hover,
 .secondary-btn:focus {
@@ -127,7 +135,7 @@ button:disabled {
   color: #fff;
 }
 .secondary-btn:active {
-  background-color: #254c24;;
+  background-color: #254c24;
   border: 1px solid rgba(255, 255, 255, 0);
   color: #fff;
 }
@@ -137,14 +145,15 @@ button:disabled {
 
 input,
 textarea,
-select{
+select {
   font-family: inherit;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 6px;
   background: #ffe5d9;
   color: rgba(0, 0, 0, 0.6);
-  transition: color 250ms cubic-bezier(0.4, 0, 0.2, 1),
-              border 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    color 250ms cubic-bezier(0.4, 0, 0.2, 1),
+    border 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 input:active,
 textarea:active,
@@ -154,9 +163,16 @@ select:active {
 }
 
 .container {
-  width: 100%;
+
+  max-width: 100%;
   margin: 0 auto;
   padding: 0 20px;
+}
+
+@media (min-width: 375px) {
+  .container {
+    max-width: 375px;
+  }
 }
 
 .section {
@@ -207,4 +223,13 @@ select:active {
   clip-path: inset(100%);
   clip: rect(0 0 0 0);
   overflow: hidden;
+}
+
+.hero-bg {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.32)),
+    url("@/images/hero-bg.webp");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
