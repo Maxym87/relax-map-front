@@ -1,7 +1,6 @@
 .hero {
   max-width: 1440px;
-  padding-top: 173px;
-  padding-bottom: 173px;
+  padding: 173px 20px;
   margin: 0 -20px;
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.32)),
@@ -30,8 +29,8 @@
 
 @media (min-width: 768px) {
   .hero {
-    padding-top: 215px;
-    padding-bottom: 215px;
+    padding: 215px 32px;
+    margin: 0 -32px;
   }
   .heroTitle {
     font-size: 48px;
@@ -40,8 +39,8 @@
 
 @media (min-width: 1440px) {
   .hero {
-    padding-top: 236px;
-    padding-bottom: 236px;
+    padding: 236px 64px;
+    margin: 0 -64px;
   }
 
   .heroTitle {
