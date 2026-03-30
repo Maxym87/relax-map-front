@@ -64,7 +64,6 @@
   }
   .title {
     font-size: 44px;
-    width: 100%;
   }
   .input {
     width: 100%;
@@ -74,6 +73,7 @@
 @media screen and (min-width: 1440px) {
   .form {
     width: 644px;
-    margin-bottom: 267px;
+    margin: 0 auto;
+    margin-bottom: 309px;
   }
 }
