@@ -40,6 +40,14 @@
   border-color: #cc6534;
   color: #0d0b0a;
 }
+.inputError {
+  border-color: #d94f4f;
+}
+
+.error {
+  font-size: 12px;
+  color: #d94f4f;
+}
 
 .button {
   width: 100%;
@@ -52,6 +60,9 @@
   .form {
     width: 644px;
     margin: 0 auto;
+  }
+  .title {
+    font-size: 44px;
   }
   .input {
     width: 100%;

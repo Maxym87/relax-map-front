@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import TanStackProvider from "@/components/TanStackProvider/TanStackProvider";
 import { Montserrat } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -40,6 +41,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={montserrat.variable}>
         <TanStackProvider>{children}</TanStackProvider>
+        <Toaster position="top-right" />
       </body>
     </html>
   );

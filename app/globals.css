@@ -109,12 +109,10 @@ button:disabled {
 }
 .primary-btn:hover,
 .primary-btn:focus {
-  /* background-color: #cc6534; */
+  background-color: #cc6534;
   border: 1px solid #cc6534;
-  /* color: #fff; */
-  background-color: #ffe5d9;
+  color: #fff;
   border: 1px solid #cc6534;
-  color: #1b391b;
 }
 
 .secondary-btn {
