@@ -6,7 +6,7 @@ export default function PopularLocations() {
       <div className={css.popularLocationsWrap}>
         <div className={css.popularLocationsHeader}>
           <h2 className={css.title}>Популярні локації</h2>
-          <button>Всі локації</button>
+          <button className={css.button + " primary-btn"}>Всі локації</button>
         </div>
         <div>Блок пагінації</div>
       </div>
