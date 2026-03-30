@@ -1,0 +1,34 @@
+.popularLocations {
+  max-width: 375px;
+  padding-top: 64px;
+  padding-bottom: 64px;
+}
+.title {
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 120%;
+  letter-spacing: -1%;
+}
+
+.popularLocationsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+@media (min-width: 768px) {
+  .title {
+    font-size: 44px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .popularLocations {
+    padding-top: 72px;
+    padding-bottom: 72px;
+  }
+  .title {
+    font-size: 52px;
+  }
+}
