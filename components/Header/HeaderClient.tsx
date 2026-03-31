@@ -27,10 +27,8 @@ export const HeaderClient = () => {
   return (
     <header className={styles.header}>
       <div className={`container ${styles.inner}`}>
-        {/* Logo */}
         <Logo />
 
-        {/* Desktop nav */}
         <div className={styles.desktopNav}>
           <Nav
             links={navLinks}
@@ -39,10 +37,8 @@ export const HeaderClient = () => {
           />
         </div>
 
-        {/* Auth buttons or actions */}
         <HeaderActions />
 
-        {/* Burger */}
         <button
           className={`${styles.iconBtn} ${styles.burger}`}
           type="button"
@@ -62,7 +58,6 @@ export const HeaderClient = () => {
         </button>
       </div>
 
-      {/* Mobile menu */}
       {isOpen && <HeaderMobileMenu onClose={close} />}
     </header>
   );
