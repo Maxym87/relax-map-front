@@ -1,11 +1,13 @@
-import AuthNav from "@/components/AuthNav/AuthNav";
 import LoginForm from "@/components/LoginForm/LoginForm";
+import css from "./LoginForm.module.css";
 
-export default function LoginPage() {
+const LoginPage = () => {
   return (
-    <div>
-      <AuthNav />
+    <>
+      <h1 className={css.title}>Вхід</h1>
       <LoginForm />
-    </div>
+    </>
   );
-}
+};
+
+export default LoginPage;
