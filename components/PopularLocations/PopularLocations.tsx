@@ -1,50 +1,13 @@
 "use client";
 
+import { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+import type { Swiper as SwiperInstance } from "swiper";
+import { usePopularLocations } from "@/lib/api/locations";
 import css from "./PopularLocations.module.css";
 import "swiper/css";
-import "swiper/css/navigation";
 
-// Тестові дані (замінити на реальні дані з API)
-const LOCATIONS = [
-  {
-    id: 1,
-    name: "Сонячна Рів'єра",
-    image: "/images/location1.jpg",
-    category: "Море",
-    rating: 4.5,
-  },
-  {
-    id: 2,
-    name: "Типігульський Спокій",
-    image: "/images/location2.jpg",
-    category: "Море",
-    rating: 4.5,
-  },
-  {
-    id: 3,
-    name: "Кінбурнська Вільниця",
-    image: "/images/location3.jpg",
-    category: "Море",
-    rating: 4.5,
-  },
-  {
-    id: 4,
-    name: "Локація 4",
-    image: "/images/location4.jpg",
-    category: "Гори",
-    rating: 4,
-  },
-  {
-    id: 5,
-    name: "Локація 5",
-    image: "/images/location5.jpg",
-    category: "Ліс",
-    rating: 5,
-  },
-];
-
+// Утиліта для відображення рейтингу
 const renderStars = (rating: number) => {
   const fullStars = Math.floor(rating);
   const hasHalfStar = rating % 1 !== 0;
@@ -69,7 +32,67 @@ const renderStars = (rating: number) => {
   );
 };
 
+// Компонент Loader
+const Loader = () => (
+  <div className={css.loader}>
+    <div className={css.spinner}></div>
+    <p>Завантаження локацій...</p>
+  </div>
+);
+
+// Компонент Error
+const ErrorMessage = ({ message }: { message: string }) => (
+  <div className={css.error}>
+    <p>❌ {message}</p>
+  </div>
+);
+
 export default function PopularLocations() {
+  const swiperRef = useRef<SwiperInstance | null>(null);
+  const { data: locations, isLoading, isError, error } = usePopularLocations(6);
+
+  const handlePrevClick = () => {
+    swiperRef.current?.slidePrev();
+  };
+
+  const handleNextClick = () => {
+    swiperRef.current?.slideNext();
+  };
+
+  if (isLoading) {
+    return (
+      <section className={css.popularLocations}>
+        <div className={css.popularLocationsWrap}>
+          <div className={css.popularLocationsHeader}>
+            <h2 className={css.title}>Популярні локації</h2>
+            <button className={css.button + " primary-btn"}>Всі локації</button>
+          </div>
+          <Loader />
+        </div>
+      </section>
+    );
+  }
+
+  if (isError || !locations) {
+    return (
+      <section className={css.popularLocations}>
+        <div className={css.popularLocationsWrap}>
+          <div className={css.popularLocationsHeader}>
+            <h2 className={css.title}>Популярні локації</h2>
+            <button className={css.button + " primary-btn"}>Всі локації</button>
+          </div>
+          <ErrorMessage
+            message={
+              error instanceof Error
+                ? error.message
+                : "Не вдалося завантажити локації"
+            }
+          />
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className={css.popularLocations}>
       <div className={css.popularLocationsWrap}>
@@ -80,11 +103,10 @@ export default function PopularLocations() {
 
         <div className={css.swiperContainer}>
           <Swiper
-            modules={[Navigation]}
-            navigation={{
-              nextEl: `.${css.buttonNext}`,
-              prevEl: `.${css.buttonPrev}`,
+            onSwiper={(swiper) => {
+              swiperRef.current = swiper;
             }}
+            loop={true}
             spaceBetween={20}
             slidesPerView={1}
             breakpoints={{
@@ -94,8 +116,8 @@ export default function PopularLocations() {
             }}
             className={css.swiper}
           >
-            {LOCATIONS.map((location) => (
-              <SwiperSlide key={location.id} className={css.slide}>
+            {locations.map((location) => (
+              <SwiperSlide key={location._id} className={css.slide}>
                 <div className={css.locationCard}>
                   <img
                     src={location.image}
@@ -103,8 +125,8 @@ export default function PopularLocations() {
                     className={css.cardImage}
                   />
                   <div className={css.cardContent}>
-                    <p className={css.category}>{location.category}</p>
-                    {renderStars(location.rating)}
+                    <p className={css.category}>{location.locationType}</p>
+                    {renderStars(location.rate)}
                     <h3 className={css.cardTitle}>{location.name}</h3>
                     <button className={css.cardButton}>
                       Переглянути локацію
@@ -115,10 +137,18 @@ export default function PopularLocations() {
             ))}
           </Swiper>
 
-          <button className={`${css.navigationButton} ${css.buttonPrev}`}>
+          <button
+            onClick={handlePrevClick}
+            className={`${css.navigationButton} ${css.buttonPrev}`}
+            aria-label="Попередня локація"
+          >
             ←
           </button>
-          <button className={`${css.navigationButton} ${css.buttonNext}`}>
+          <button
+            onClick={handleNextClick}
+            className={`${css.navigationButton} ${css.buttonNext}`}
+            aria-label="Наступна локація"
+          >
             →
           </button>
         </div>
