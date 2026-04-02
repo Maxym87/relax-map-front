@@ -36,15 +36,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body className={montserrat.variable}>
-        <Layout>{children}</Layout>
-        <TanStackProvider>{children}</TanStackProvider>
-        <Toaster position="top-right" />
+        <TanStackProvider>
+          <Layout>{children}</Layout>
+          <Toaster position="top-right" />
+        </TanStackProvider>
       </body>
     </html>
   );
