@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import Layout from '@/components/Layout/Layout';
 
+
 const montserrat = Montserrat({
   subsets: ["cyrillic", "latin"],
   weight: ["400", "700"],
@@ -41,7 +42,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={montserrat.variable}>
-       {/*  <Layout>{children}</Layout> */}
+        <Layout>{children}</Layout>
         <TanStackProvider>{children}</TanStackProvider>
         <Toaster position="top-right" />
       </body>
