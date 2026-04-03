@@ -9,7 +9,7 @@ import { useAuth } from '@/hooks/useAuth';
   const Header = () => {
   const { isAuthenticated, user, logout } = useAuth();
   const [showModal, setShowModal] = useState(false);
-
+    //const isAuthenticated = true; // Замість цього використайте реальний стан автентифікації
   return (
     <header className={styles.header}>
         
@@ -18,7 +18,7 @@ import { useAuth } from '@/hooks/useAuth';
       <span>Relax Map</span>
     </Link>
       <nav>
-        {isAuthenticated ? (
+        {(isAuthenticated) ? (
           <>
             <Link href="/locations">Місця відпочинку</Link>
             <Link href="/profile">Мій Профіль</Link>
