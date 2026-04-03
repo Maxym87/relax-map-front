@@ -4,7 +4,7 @@ import { Montserrat } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import Layout from '@/components/Layout/Layout';
-
+import "modern-normalize/modern-normalize.css";
 
 const montserrat = Montserrat({
   subsets: ["cyrillic", "latin"],

@@ -1,66 +1,239 @@
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 30px;
+  width: 100%;
+  border-bottom: 1px solid #eee;
   background-color: #fff;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.logo a {
-  font-weight: bold;
-  font-size: 24px;
-  color: #333;
+.container {
+  max-width: 100%;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* 🔹 Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
   text-decoration: none;
+  color: #000;
+  cursor: pointer;
 }
 
-.nav a {
-  margin-left: 20px;
-  text-decoration: none;
-  color: #333;
-  font-weight: 500;
+.logo:hover {
+  opacity: 0.8;
 }
 
-.shareBtn {
-  background-color: #4caf50;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 5px;
-}
-
-.loginBtn {
-  color: #2196f3;
-}
-
-.signupBtn {
-  color: #ff5722;
-}
-
-.logoutBtn {
+/* 🔹 Burger button */
+.burger {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   background: none;
   border: none;
   cursor: pointer;
-  margin-left: 10px;
-  font-size: 16px;
+  z-index: 1001;
 }
 
+.burger span {
+  width: 24px;
+  height: 2px;
+  background: #000;
+  transition: 0.3s;
+}
+
+/* 🔹 Mobile menu */
+.mobileMenu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 70%;
+  height: 100vh;
+  background: #fff;
+  transition: 0.3s;
+  z-index: 1000;
+  padding: 80px 20px;
+}
+
+.mobileMenu.open {
+  right: 0;
+}
+
+.mobileNav {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.mobileNav a {
+  text-decoration: none;
+  color: #000;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.mobileNav a:hover {
+  color: #555;
+}
+
+/* 🔹 Hide desktop on mobile */
+.nav
+ {
+  display: none;
+}
+.actions {
+  display: none;
+}
+
+/* 🔹 Tablet */
+@media screen and (min-width: 768px) {
+/* 🔹 Actions */
+.nav {
+    display: none;
+    gap: 24px;
+  }
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: right;
+}
+
+.login,
+.register {
+  padding: 6px 12px;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* кнопки */
+.login {
+  color: #000;
+}
+
+.login:hover {
+  background-color: #f2f2f2;
+}
+
+.register {
+  background-color: #CC6534;
+  color: #fff;
+}
+
+.register:hover {
+  opacity: 0.8;
+}  .container {
+    padding: 16px 32px;
+  }
+
+  .link {
+    text-decoration: none;
+    color: #000;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .link:hover {
+    color: #555;
+  }
+
+}
+
+/* 🔹 Desktop */
+@media screen and (min-width: 1440px) {
+  .container {
+    max-width: 1440px;
+    margin-left: auto;
+  }
+  .nav {
+    display: flex;
+    gap: 24px;
+    margin-left: auto; }
+
+    .actions {
+    display: flex;
+    gap: 12px;
+      align-items: right;
+  }
+    .mobileMenu {
+    display: none;
+  }
+   .burger {
+  display: none;
+}
+
+}
+/* Overlay */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+}
+/*  Modal */
 .modal {
   position: fixed;
-  top:0;
-  left:0;
-  right:0;
-  bottom:0;
-  background: rgba(0,0,0,0.5);
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+  background: #fff;
+  padding: 24px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 320px;
+
+  z-index: 2001;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  text-align: center;
 }
 
-.modalContent {
-  background:#fff;
-  padding:20px;
-  border-radius:8px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
+/* текст */
+.modalText {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+/* кнопки */
+.modalActions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cancelBtn,
+.confirmBtn {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: 0.3s;
+}
+
+/* cancel */
+.cancelBtn {
+  background: #f2f2f2;
+}
+
+.cancelBtn:hover {
+  background: #e0e0e0;
+}
+
+/* confirm */
+.confirmBtn {
+  background: #CC6534;
+  color: #fff;
+}
+
+.confirmBtn:hover {
+  opacity: 0.85;
 }
