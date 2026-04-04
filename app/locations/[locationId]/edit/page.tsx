@@ -17,7 +17,6 @@ export default async function EditLocationPage({
     <section className="section">
       <div className="container">
         <h1>Редагування місця</h1>
-
         <LocationForm
           mode="edit"
           locationId={locationId}
