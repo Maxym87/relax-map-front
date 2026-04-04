@@ -5,41 +5,71 @@ import Link from "next/link";
 import { useState } from "react";
 import styles from "./Header.module.css";
 import { useAuth } from "@/hooks/useAuth";
-import { useParams } from "next/navigation";
 
-const Header = () => {
+type LogoutModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+};
+
+function LogoutModal({ isOpen, onClose, onConfirm }: LogoutModalProps) {
+  if (!isOpen) return null;
+
+  return (
+    <div className={styles.overlay}>
+      <div>
+        <p>Ви дійсно хочете вийти?</p>
+        <button type="button" onClick={onConfirm}>
+          Так
+        </button>
+        <button type="button" onClick={onClose}>
+          Ні
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export default function Header() {
   const { isAuthenticated, user, logout } = useAuth();
-  const [showModal, setShowModal] = useState(false);
+
   const [isOpen, setIsOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const toggleMenu = () => setIsOpen(!isOpen);
-  const params = useParams();
-  const isMyProfilePage = user?.data?._id === params.userId;
+
   return (
     
     <header className={styles.header}>
       <div className={styles.container}>
+        {/*  Logo */}
         <Link href="/" className={styles.logo}>
-          <Image src="/logo.svg" alt="logo" width={24} height={24} />
+          <Image src="/logo.svg" alt="logo" width={28} height={28} />
           <span>Relax Map</span>
         </Link>
-        <div className={styles.container}>
+
+        {/* Меню Header */}
+        <nav className={styles.nav}>
+          <div className={styles.mainlocations}>
+            <Link href="/" className={styles.linkmain}>
+              Головна
+            </Link>
+            <Link href="/locations" className={styles.linklocations}>
+              Місця відпочинку
+            </Link>
+          </div>
           {isAuthenticated ? (
             <>
               <nav className={styles.nav}>
                 <Link href="/locations" className={styles.link}>
                   Місця відпочинку
                 </Link>
-               {isMyProfilePage && (
-                  <>
-                    <Link href={`/profile/${user?.data?._id}`} className={styles.link}>
-                      Мій Профіль
-                    </Link>
-                    <Link href="/locations/add" className={styles.link}>
-                      Поділитись локацією
-                    </Link>
-                  </>
-                )}
-                <span>{user?.data?.name}</span>
+                <Link href="/profile" className={styles.link}>
+                  Мій Профіль
+                </Link>
+                <Link href="/locations/add" className={styles.link}>
+                  Поділитись локацією
+                </Link>
+                <span>{user?.name}</span>
               </nav>
               <div className={styles.actions}>
                 <button onClick={() => setShowModal(true)}>Вихід</button>
@@ -47,22 +77,12 @@ const Header = () => {
             </>
           ) : (
             <>
-              <nav className={styles.nav}>
-                <Link href="/" className={styles.link}>
-                  Головна
-                </Link>
-                <Link href="/locations" className={styles.link}>
-                  Місця відпочинку
-                </Link>
-              </nav>
-              <div className={styles.actions}>
-                <Link href="/sign-in" className={styles.login}>
-                  Вхід
-                </Link>
-                <Link href="/sign-up" className={styles.register}>
-                  Реєстрація
-                </Link>
-              </div>
+              <Link href="/sign-in" className={styles.login}>
+                Вхід
+              </Link>
+              <Link href="/sign-up" className={styles.register}>
+                Реєстрація
+              </Link>
             </>
           )}
           {/* Burger */}
@@ -81,7 +101,7 @@ const Header = () => {
                   <Link href="/locations" onClick={toggleMenu}>
                     Місця відпочинку
                   </Link>
-                  <Link href={`/profile/${user?.data?._id}`} onClick={toggleMenu}>
+                  <Link href="/profile" onClick={toggleMenu}>
                     Мій Профіль
                   </Link>
                   <Link href="/locations/add" onClick={toggleMenu}>
@@ -113,48 +133,26 @@ const Header = () => {
               </div>
             </>
           )}
-          {/* Overlay */}
-          {isOpen && (
-            <div className={styles.overlay} onClick={toggleMenu}></div>
-          )}
-        </div>
-
-        {showModal && (
-  <>
-    {/* Overlay */}
-    <div
-      className={styles.modalOverlay}
-      onClick={() => setShowModal(false)}
-    ></div>
-
-    {/* Modal */}
-    <div className={styles.modal}>
-      <p className={styles.modalText}>Вийти з акаунту?</p>
-
-      <div className={styles.modalActions}>
-        <button
-          className={styles.cancelBtn}
-          onClick={() => setShowModal(false)}
-        >
-          Ні
-        </button>
-
-        <button
-          className={styles.confirmBtn}
-          onClick={() => {
-            logout();
-            setShowModal(false);
-          }}
-        >
-          Так
-        </button>
+        </nav>
       </div>
-    </div>
-  </>
-)}
-      </div>
+
+      {isOpen && (
+          <div
+            className={styles.overlay}
+            onClick={() => setIsOpen(false)}
+          />
+        )}
+
+      {/* 🔹 Modal */}
+      <LogoutModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={() => {
+          logout();
+          setShowModal(false);
+          setIsOpen(false);
+        }}
+      />
     </header>
   );
-};
-
-export default Header;
+}
