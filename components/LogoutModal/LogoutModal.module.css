@@ -1,0 +1,99 @@
+/* 🔹 overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+}
+
+/* 🔹 modal */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: calc(100% - 32px);
+  max-width: 360px;
+
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+
+  z-index: 2001;
+  text-align: center;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* 🔹 title */
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* 🔹 text */
+.text {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 24px;
+}
+
+/* 🔹 buttons */
+.actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* 🔹 cancel */
+.cancel {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  background: #f2f2f2;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.cancel:hover {
+  background: #e5e5e5;
+}
+
+/* 🔹 confirm */
+.confirm {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  background: #CC6534;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.confirm:hover {
+  opacity: 0.85;
+}
+
+/* 🔹 Tablet */
+@media (min-width: 768px) {
+  .modal {
+    padding: 32px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+}
+
+/* 🔹 Desktop */
+@media (min-width: 1440px) {
+  .modal {
+    max-width: 400px;
+  }
+}

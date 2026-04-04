@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import styles from "./Header.module.css";
 import { useAuth } from "@/hooks/useAuth";
+import LogoutModal from "@/components/LogoutModal/LogoutModal";
 
 const Header = () => {
   const { isAuthenticated, user, logout } = useAuth();
@@ -20,7 +21,7 @@ const Header = () => {
           <span>Relax Map</span>
         </Link>
         <div className={styles.container}>
-          {isAuthenticated ? (
+          {!isAuthenticated ? (
             <>
               <nav className={styles.nav}>
                 <Link href="/locations" className={styles.link}>
@@ -146,6 +147,11 @@ const Header = () => {
   </>
 )}
       </div>
+      <LogoutModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={() => { logout(); setShowModal(false); }}
+      />
     </header>
   );
 };
