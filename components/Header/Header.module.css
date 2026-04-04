@@ -28,7 +28,7 @@
   justify-content: center;
 }
 .linkmain, .linklocations {
-  color: #344054;
+  color: #1B391B;
   text-decoration: none;
   transition: 0.2s;
 }
@@ -39,6 +39,61 @@
 .linklocations:hover {
   color: #CC6534;
 }
+
+.mobileNav {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.mobileNav a {
+  font-size: 18px;
+
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.mobileNav :hover {
+  color: #CC6534;
+}
+
+.login {
+  padding: 6px 12px;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s;
+  color: #000;
+}
+.register{
+  padding: 6px 12px;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s;
+  background-color: #CC6534;
+  color: #fff;
+}
+
+/* кнопки */
+  .login:hover {
+    background-color: #f2f2f2;
+  }
+
+  .register:hover {
+    color: #fff;
+    opacity: 0.7;
+  }  
+  .sharelocation {
+  background-color: #CC6534;
+  color: #fff;
+  }
+  .sharelocation:hover {
+    opacity: 0.8;
+  }
+
 
 /*  right */
 .right {
@@ -73,50 +128,82 @@
   text-decoration: underline;
 }
 
-/*  burger */
 .burger {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  border: none;
+  gap: 5px;
   background: none;
+  border: none;
   cursor: pointer;
+  z-index: 1100;
 }
 
 .burger span {
   width: 24px;
   height: 2px;
-  background: #000;
+  background: #101828;
+  transition: all 0.3s ease;
 }
 
-/*  mobile menu */
+.burger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.burger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.burger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+
 .mobileMenu {
   position: fixed;
   top: 0;
   right: -100%;
   width: 75%;
+  max-width: 320px;
   height: 100vh;
+
   background: #fff;
-  transition: 0.3s;
-  padding: 80px 20px;
+  padding: 80px 24px;
+
+  transition: right 0.3s ease;
+  z-index: 1050;
+
+  box-shadow: -4px 0 20px rgba(0,0,0,0.1);
 }
 
 .mobileMenu.open {
   right: 0;
 }
 
-.mobileNav {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+
+
+.logoutMobile {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #f5a37d;
+  border: none;
+  cursor: pointer;
+}
+
+.logoutMobile:hover {
+  background: #f15912;
+  color: #fff;
 }
 
 /*  overlay */
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(2px);
+  z-index: 1000;
 }
+
 
 /* ***************************************** tablet */
 @media (min-width: 768px) {
@@ -136,40 +223,7 @@
     display: flex;
   }
  
-.login,
-.register {
-  padding: 6px 12px;
-  text-decoration: none;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: 0.3s;
-}
 
-/* кнопки */
-.login {
-  color: #000;
-}
-
-.login:hover {
-  background-color: #f2f2f2;
-}
-
-.register {
-  background-color: #CC6534;
-  color: #fff;
-}
-
-.register:hover {
-  opacity: 0.8;
-}  
-  .sharelocation {
-  background-color: #CC6534;
-  color: #fff;
-  }
-  .sharelocation:hover {
-    opacity: 0.8;
-  }
   .userBlock {
   display: none;
 }
@@ -189,6 +243,9 @@
   display: flex;
 }
 .burger {
+    display: none;
+  }
+  .mobileMenu {
     display: none;
   }
 

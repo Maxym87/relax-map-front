@@ -42,17 +42,14 @@ export default function Header() {
               </Link>
               <div className={styles.userBlock}>
                 <span className={styles.userName}>{user?.name || "User"}</span>
-                <a
-                  className={styles.logout}
-                  onClick={() => setShowModal(true)}
-              > 
-                <Image
-                  src="/img/logout.svg"
-                  alt="Logout"
-                  width={24}
-                  height={24}
-                />
-                </a>                 
+                <a className={styles.logout} onClick={() => setShowModal(true)}>
+                  <Image
+                    src="/img/logout.svg"
+                    alt="Logout"
+                    width={24}
+                    height={24}
+                  />
+                </a>
               </div>
             </>
           ) : (
@@ -68,7 +65,10 @@ export default function Header() {
         </nav>
 
         {/*  Burger menu */}
-        <button className={styles.burger} onClick={() => setIsOpen(!isOpen)}>
+        <button
+          className={`${styles.burger} ${isOpen ? styles.active : ""}`}
+          onClick={() => setIsOpen(!isOpen)}
+        >
           <span></span>
           <span></span>
           <span></span>
@@ -85,16 +85,17 @@ export default function Header() {
             Місця відпочинку
           </Link>
 
-          {isAuthenticated ? (
+          {isAuthenticated && (
             <>
               <Link href="/profile" onClick={() => setIsOpen(false)}>
-                Мій профіль
+                Профіль
               </Link>
-              <Link href="/locations/add" onClick={() => setIsOpen(false)}>
-                Поділитись локацією
+              <Link href="/LocationDescription" className={styles.register} onClick={() => setIsOpen(false)}>
+                Опублікувати статтю
               </Link>
 
               <button
+                className={styles.logoutMobile}
                 onClick={() => {
                   setShowModal(true);
                   setIsOpen(false);
@@ -103,18 +104,27 @@ export default function Header() {
                 Вийти
               </button>
             </>
-          ) : (
+          )}
+
+          {!isAuthenticated && (
             <>
-              <Link href="/sign-in">Вхід</Link>
-              <Link href="/sign-up">Реєстрація</Link>
+              <Link href="/sign-in" className={styles.login} onClick={() => setIsOpen(false)}>
+                Вхід
+              </Link>
+              <Link href="/sign-up" className={styles.register} onClick={() => setIsOpen(false)}>
+                Реєстрація
+              </Link>
             </>
           )}
         </nav>
       </div>
 
       {isOpen && (
-        <div className={styles.overlay} onClick={() => setIsOpen(false)} />
-      )}
+          <div
+            className={styles.overlay}
+            onClick={() => setIsOpen(false)}
+          />
+        )}
 
       {/* 🔹 Modal */}
       <LogoutModal
@@ -123,6 +133,7 @@ export default function Header() {
         onConfirm={() => {
           logout();
           setShowModal(false);
+          setIsOpen(false);
         }}
       />
     </header>
