@@ -15,8 +15,7 @@ export const useAuth = () => {
   };
   return {
     user: data,
-    //isAuthenticated: !!data,
-    isAuthenticated: true,
+    isAuthenticated: !!data,
     isLoading,
     isError,
     logout
