@@ -1,14 +1,15 @@
 import axios from "axios";
 import { nextServer } from "./api";
+import { parse } from "cookie";
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL + "/api";
 
-const clientApi = axios.create({
+export const clientApi = axios.create({
   baseURL,
   withCredentials: true,
 });
 
-const nextClient = axios.create({
+export const nextClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL + "/api",
   withCredentials: true,
 });
@@ -37,8 +38,44 @@ export const fetchLocationTypes = async () => {
   return response.data.data;
 };
 
-export default clientApi;
+// 🔹 Location CRUD (create/update) с fetch
+export const createLocation = async (formData: FormData) => {
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
+  const response = await fetch("/api/locations", {
+    method: "POST",
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    body: formData,
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Не вдалося створити локацію");
+  }
+
+  return data;
+};
+
+export const updateLocation = async (locationId: string, formData: FormData) => {
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+  const response = await fetch(`/api/locations/${locationId}`, {
+    method: "PATCH",
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    body: formData,
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Не вдалося оновити локацію");
+  }
+
+  return data;
+};
+
+// 🔹 User API
 export const clientUserService = {
   getCurrentUser: async () => {
     try {
@@ -71,6 +108,7 @@ export const clientUserService = {
   },
 };
 
+// 🔹 Auth API
 export interface RegisterData {
   name: string;
   email: string;
@@ -101,3 +139,5 @@ export const login = async (data: LoginData) => {
     throw error;
   }
 };
+
+export default clientApi;
