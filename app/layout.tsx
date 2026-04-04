@@ -4,6 +4,7 @@ import { Montserrat } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import Layout from '@/components/Layout/Layout';
+import "modern-normalize/modern-normalize.css";
 
 const montserrat = Montserrat({
   subsets: ["cyrillic", "latin"],
@@ -35,15 +36,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body className={montserrat.variable}>
-       {/*  <Layout>{children}</Layout> */}
-        <TanStackProvider>{children}</TanStackProvider>
-        <Toaster position="top-right" />
+        <TanStackProvider>
+          <Layout>{children}</Layout>
+          <Toaster position="top-right" />
+        </TanStackProvider>
       </body>
     </html>
   );
