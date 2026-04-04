@@ -1,7 +1,79 @@
 import { useQuery } from "@tanstack/react-query";
 import { nextServer } from "./api";
 
-// TypeScript інтерфейс для локації
+
+export type CreateLocationPayload = FormData;
+
+export const createLocation = async (formData: CreateLocationPayload) => {
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+  const response = await fetch(
+    "https://relax-map-back.onrender.com/api/locations",
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Не вдалося створити локацію");
+  }
+
+  return data;
+};
+
+
+export const getLocationById = async (locationId: string) => {
+  const response = await fetch(
+    `https://relax-map-back.onrender.com/api/locations/${locationId}`,
+    {
+      cache: "no-store",
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Не вдалося отримати локацію");
+  }
+
+  return data;
+};
+
+
+export const updateLocation = async (
+  locationId: string,
+  formData: FormData
+) => {
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+  const response = await fetch(
+    `https://relax-map-back.onrender.com/api/locations/${locationId}`,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Не вдалося оновити локацію");
+  }
+
+  return data;
+};
+
 export interface Location {
   _id: string;
   name: string;
@@ -32,15 +104,14 @@ interface GetLocationsResponse {
   data: Location[];
 }
 
-// Функція для отримання локацій з сервера
+
 const fetchLocations = async (
-  params: GetLocationsParams,
+  params: GetLocationsParams
 ): Promise<Location[]> => {
   try {
     const response = await nextServer.get<GetLocationsResponse>("/locations", {
       params,
     });
-    // Структура: response.data.data = { data: [...], page, limit, totalItems, totalPages }
     return response.data.data || [];
   } catch (error) {
     console.error("Failed to fetch locations:", error);
@@ -48,7 +119,7 @@ const fetchLocations = async (
   }
 };
 
-// React Query хук для отримання популярних локацій
+
 export const usePopularLocations = (limit: number = 6) => {
   return useQuery({
     queryKey: ["popularLocations", { limit }],
@@ -57,22 +128,18 @@ export const usePopularLocations = (limit: number = 6) => {
         limit,
         page: 1,
       }),
-    staleTime: 5 * 60 * 1000, // 5 хвилин
-    // gcTime: 10 * 60 * 1000, // 10 хвилин (раніше називали cacheTime)
+    staleTime: 5 * 60 * 1000,
   });
 };
 
-// Хук для отримання локацій з фільтрами
 export const useFilteredLocations = (params: GetLocationsParams) => {
   return useQuery({
     queryKey: ["locations", params],
     queryFn: () => fetchLocations(params),
     staleTime: 5 * 60 * 1000,
-    // gcTime: 10 * 60 * 1000,
   });
 };
 
-// Хук для отримання однієї локації за ID
 export const useLocationById = (id: string) => {
   return useQuery({
     queryKey: ["location", id],
@@ -84,8 +151,7 @@ export const useLocationById = (id: string) => {
       }>(`/locations/${id}`);
       return response.data.data;
     },
-    enabled: !!id, // Запит тільки якщо є ID
-    staleTime: 10 * 60 * 1000, // 10 хвилин
-    // gcTime: 20 * 60 * 1000,
+    enabled: !!id,
+    staleTime: 10 * 60 * 1000,
   });
 };
