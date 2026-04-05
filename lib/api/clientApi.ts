@@ -57,7 +57,10 @@ export const createLocation = async (formData: FormData) => {
   return data;
 };
 
-export const updateLocation = async (locationId: string, formData: FormData) => {
+export const updateLocation = async (
+  locationId: string,
+  formData: FormData,
+) => {
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
@@ -141,3 +144,14 @@ export const login = async (data: LoginData) => {
 };
 
 export default clientApi;
+
+// 🔹 Feedbacks API
+export const getLocationFeedbacks = async (locationId: string) => {
+  try {
+    const res = await nextClient.get(`/api/locations/${locationId}/feedbacks`);
+    return res.data?.feedbacks ?? [];
+  } catch (error) {
+    console.error("Client API Error (getLocationFeedbacks):", error);
+    throw error;
+  }
+};
