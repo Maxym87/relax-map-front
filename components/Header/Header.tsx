@@ -80,7 +80,7 @@ export default function Header() {
           <Link href="/" onClick={() => setIsOpen(false)}>
             Головна
           </Link>
-          <Link href="/locations" onClick={() => setIsOpen(false)}>
+          <Link href="..\LocationGallery" onClick={() => setIsOpen(false)}>
             Місця відпочинку
           </Link>
 
