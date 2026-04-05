@@ -1,4 +1,3 @@
-
 export interface User {
   id: string;
   name: string;
@@ -39,4 +38,21 @@ export interface LocationsResponse {
   totalPages: number;
   hasNextPage: boolean;
   hasPreviousPage: boolean;
+}
+export interface Feedback {
+  _id: string;
+  id?: string;
+  rate: number;
+  description: string;
+  userName: string;
+  locationId?: string;
+  locationType?: string;
+}
+
+export interface FeedbacksResponse {
+  page: number;
+  perPage: number;
+  totalPages: number;
+  totalFeedbacks: number;
+  feedbacks: Feedback[];
 }
