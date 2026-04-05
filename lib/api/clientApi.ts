@@ -1,6 +1,6 @@
 import axios from "axios";
 import { nextServer } from "./api";
-import { parse } from "cookie";
+
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL + "/api";
 
@@ -22,8 +22,8 @@ export interface FetchLocationsParams {
   type?: string;
   sort?: string;
 }
-
 export const fetchLocations = async (params: FetchLocationsParams) => {
+
   const response = await clientApi.get("/locations", { params });
   return response.data.data;
 };
