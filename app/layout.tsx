@@ -7,6 +7,9 @@ import "modern-normalize/modern-normalize.css";
 import Header from "../components/Header/Header";
 import Footer from "../components/Footer/Footer";
 
+import Header from "@/components/Header/Header";
+import Footer from "@/components/Footer/Footer";
+
 const montserrat = Montserrat({
   subsets: ["cyrillic", "latin"],
   weight: ["400", "700"],
@@ -45,13 +48,15 @@ export default function RootLayout({
       <body className={montserrat.variable}>
         <TanStackProvider>
           <Header />
-          <main>{children}</main>
-          <Footer /> 
+
+          <main>
+            {children}
+          </main>
+          <Footer />
+
           <Toaster position="top-right" />
         </TanStackProvider>
       </body>
     </html>
   );
 }
-
-
