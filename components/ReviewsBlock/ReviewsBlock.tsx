@@ -16,7 +16,7 @@ export interface Review {
   userName: string;
   rate: number;
   description: string;
-  locationType: string;
+  locationType?: string;
 }
 
 interface ReviewsBlockProps {
@@ -30,7 +30,9 @@ function ReviewCard({ review }: { review: Review }) {
       <p className={styles.description}>{review.description}</p>
       <div className={styles.cardFooter}>
         <p className={styles.userName}>{review.userName}</p>
-        <p className={styles.locationType}>{review.locationType}</p>
+        {review.locationType && (
+          <p className={styles.locationType}>{review.locationType}</p>
+        )}
       </div>
     </div>
   );

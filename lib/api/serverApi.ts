@@ -1,5 +1,22 @@
-import { cookies } from 'next/headers';
-import { nextServer } from './api';
+// lib/api/serverApi.ts
+import { cookies } from "next/headers";
+import { nextServer } from "./api";
+
+const BASE_URL = "https://relax-map-back.onrender.com/api";
+
+export const getLocationById = async (locationId: string) => {
+  const response = await fetch(`${BASE_URL}/locations/${locationId}`, {
+    cache: "no-store",
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Не вдалося отримати локацію");
+  }
+
+  return data;
+};
 
 export const serverUserService = {
   getCurrentUser: async () => {
@@ -7,9 +24,9 @@ export const serverUserService = {
       const cookieStore = await cookies();
       const cookieHeader = cookieStore.toString();
 
-      const res = await nextServer.get('/users/current', {
+      const res = await nextServer.get("/users/current", {
         headers: {
-          Cookie: cookieHeader, 
+          Cookie: cookieHeader,
         },
       });
       return res.data;
@@ -37,5 +54,34 @@ export const serverUserService = {
       console.error(`Server API Error (getUserLocations):`, error);
       return { data: { data: [], totalItems: 0 } };
     }
+  },
+};
+
+// 🔹 Feedbacks API
+export const getFeedbacks = async () => {
+  try {
+    const res = await nextServer.get("/api/feedback", {
+      params: { perPage: 10 },
+    });
+    console.log("Feedbacks response:", res.data);
+    return (res.data?.feedbacks ?? []).map(
+      (f: { _id: string; [key: string]: unknown }) => ({
+        ...f,
+        id: f._id,
+      }),
+    );
+  } catch (error) {
+    console.error("Server API Error (getFeedbacks):", error);
+    return [];
+  }
+};
+
+export const getLocationFeedbacks = async (locationId: string) => {
+  try {
+    const res = await nextServer.get(`/api/locations/${locationId}/feedbacks`);
+    return res.data?.feedbacks ?? [];
+  } catch (error) {
+    console.error("Server API Error (getLocationFeedbacks):", error);
+    return [];
   }
 };
