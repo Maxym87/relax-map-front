@@ -1,13 +1,7 @@
-import axios from "axios";
+import axios from 'axios';
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 export const nextServer = axios.create({
-  baseURL,
-
-  withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-  },
+  baseURL: 'http://localhost:3000/api',
+  withCredentials: true, // дозволяє axios працювати з cookie
 });
-
