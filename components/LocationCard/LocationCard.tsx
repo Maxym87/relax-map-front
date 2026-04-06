@@ -1,5 +1,8 @@
 import css from "./LocationCard.module.css";
-import { Location } from "@/types";
+import { Location } from "@/types/types";
+import Link from "next/link";
+import Image from "next/image";
+import StarRating from "../ui/star-rating";
 
 type LocationCardProps = {
   location: Location;
@@ -8,16 +11,17 @@ type LocationCardProps = {
 export default function LocationCard({ location }: LocationCardProps) {
   return (
     <article className={css.card}>
-      <div className={css.imagePlaceholder}>Фото</div>
+      
+      {location.image && (<Image src={location.image} alt={location.name} width="420" height="200" />)}
 
       <div className={css.content}>
-        <p className={css.typeText}>Тип</p>
-        <p className={css.rating}>★★★★★</p>
+        <p className={css.typeText}>{location.locationType}</p>
+        <StarRating rate={location.rate ?? 0} size={22} />
         <h3 className={css.title}>{location.name}</h3>
 
-        <button type="button" className={`secondary-btn ${css.button}`}>
+        <Link href={`/locations/${location._id}`} className={`secondary-btn ${css.button}`}>
           Переглянути локацію
-        </button>
+        </Link>
       </div>
     </article>
   );

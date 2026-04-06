@@ -1,5 +1,5 @@
 import css from "./LocationsGrid.module.css";
-import { Location } from "@/types";
+import { Location } from "@/types/types";
 import LocationCard from "../LocationCard/LocationCard";
 
 type LocationsGridProps = {

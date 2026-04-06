@@ -1,11 +1,6 @@
 import axios from 'axios';
 
-
 export const nextServer = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: 'https://relax-map-back.onrender.com/api',
   withCredentials: true,
 });
-
-
-
-

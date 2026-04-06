@@ -1,45 +1,24 @@
-
 import { nextServer } from './api';
 import { cookies } from 'next/headers';
-import { Feedback, FeedbacksResponse } from "@/types/types";
+import type { Feedback, FeedbacksResponse } from '@/types/types';
 
-export async function getFeedbacks() {
+export const getFeedbacks = async () => {
   try {
-    const cookieStore = await cookies();
-    const accessToken = cookieStore.get('accessToken')?.value;
-    const headers: Record<string, string> = {};
-
-    if (accessToken) {
-      headers.Authorization = `Bearer ${accessToken}`;
-    }
-
-    const res = await nextServer.get('/feedbacks', {
-      headers,
+    const res = await nextServer.get('/feedback', {
+      params: { perPage: 10 },
     });
-
-    return res.data;
+    return (res.data?.feedbacks ?? []).map((f: Feedback) => ({
+      ...f,
+      id: f._id,
+    }));
   } catch (error) {
-    console.error('Server API Error (getFeedbacks):', error);
-    return { data: [] };
+    return [];
   }
-}
+};
 
-// : Feedbacks API
-// export const getFeedbacks = async (): Promise<Feedback[]> => {
-//   const res = await nextServer.get<FeedbacksResponse>("/api/feedback", {
-//     params: { perPage: 10 },
-//   });
-//   return (res.data?.feedbacks ?? []).map((f) => ({
-//     ...f,
-//     id: f._id,
-//   }));
-// };
-
-export const getLocationFeedbacks = async (
-  locationId: string,
-): Promise<Feedback[]> => {
+export const getLocationFeedbacks = async (locationId: string): Promise<Feedback[]> => {
   const res = await nextServer.get<FeedbacksResponse>(
-    `/api/locations/${locationId}/feedbacks`,
+    `/locations/${locationId}/feedbacks`
   );
   return (res.data?.feedbacks ?? []).map((f) => ({
     ...f,
@@ -47,12 +26,43 @@ export const getLocationFeedbacks = async (
   }));
 };
 
-
+export const getLocationById = async (locationId: string) => {
+  const response = await fetch(
+    `https://relax-map-back.onrender.com/api/locations/${locationId}`,
+    { cache: 'no-store' }
+  );
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || 'Не вдалося отримати локацію');
+  return data.data;
+};
 
 export const serverUserService = {
   getCurrentUser: async () => {
     try {
       const cookieStore = await cookies();
       const cookieHeader = cookieStore.toString();
-
-
+      const res = await nextServer.get('/users/current', {
+        headers: { Cookie: cookieHeader },
+      });
+      return res.data;
+    } catch {
+      return null;
+    }
+  },
+  getUserById: async (userId: string) => {
+    try {
+      const res = await nextServer.get(`/users/${userId}`);
+      return res.data;
+    } catch {
+      return null;
+    }
+  },
+  getUserLocations: async (userId: string) => {
+    try {
+      const res = await nextServer.get(`/users/${userId}/locations`);
+      return res.data;
+    } catch {
+      return { data: { data: [], totalItems: 0 } };
+    }
+  },
+};

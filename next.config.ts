@@ -1,8 +1,15 @@
 import type { NextConfig } from "next";
-
 const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "https://relax-map-back.onrender.com/api/:path*",
+      },
+    ];
   },
   images: {
     remotePatterns: [
@@ -10,8 +17,11 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "ac.goit.global",
       },
+      {
+        protocol: "https",
+        hostname: "ftp.goit.study",
+      },
     ],
   },
 };
-
 export default nextConfig;
