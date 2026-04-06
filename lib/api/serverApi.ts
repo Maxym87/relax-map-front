@@ -41,6 +41,13 @@ export const getLocationFeedbacks = async (
   const res = await nextServer.get<FeedbacksResponse>(
     `/api/locations/${locationId}/feedbacks`,
   );
+  return (res.data?.feedbacks ?? []).map((f) => ({
+    ...f,
+    id: f._id,
+  }));
+};
+
+
 
 export const serverUserService = {
   getCurrentUser: async () => {
