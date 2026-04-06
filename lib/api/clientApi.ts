@@ -24,7 +24,7 @@ export const register = async (data: RegisterData): Promise<User> => {
   } catch (error) {
     const err = error as AxiosError<{ error?: string }>;
 
-    throw new Error(err.response?.data?.error || "Ошибка регистрации");
+    throw new Error(err.response?.data?.error || "Помилка реєстрації");
   }
 };
 
