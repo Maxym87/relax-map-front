@@ -33,14 +33,14 @@ export default function Header() {
           </div>
           {isAuthenticated ? (
             <>
-              <Link href="/profile" className={styles.linkprofile}>
+              <Link href={`/profile/${user?.data?._id}`} className={styles.linkprofile}>
                 Мій профіль
               </Link>
               <Link href="/locations/add" className={styles.sharelocation}>
                 Поділитись локацією
               </Link>
               <div className={styles.userBlock}>
-                <span className={styles.userName}>{user?.name || "User"}</span>
+                <span className={styles.userName}>{user?.data?.name || "User"}</span>
                 <a className={styles.logout} onClick={() => setShowModal(true)}>
                   <Image
                     src="/img/logout.svg"
