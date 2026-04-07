@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { api } from "@/lib/api/api";
 import { isAxiosError } from "axios";
 
@@ -9,7 +9,11 @@ export async function POST(req: NextRequest) {
 
     const responseData = {
       ...apiRes.data,
-      userId: apiRes.data.user?._id || apiRes.data.user?.id || apiRes.data._id || apiRes.data.id,
+      userId:
+        apiRes.data.user?._id ||
+        apiRes.data.user?.id ||
+        apiRes.data._id ||
+        apiRes.data.id,
     };
 
     const res = NextResponse.json(responseData, {
@@ -24,12 +28,9 @@ export async function POST(req: NextRequest) {
         : [setCookie];
 
       cookieArray.forEach((cookie) => {
-        console.log('Cookie being set:', cookie);
         res.headers.append("Set-Cookie", cookie);
       });
     }
-    console.log('Set-Cookie header:', setCookie);
-console.log('Response data:', apiRes.data);
 
     return res;
   } catch (error) {

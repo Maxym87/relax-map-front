@@ -1,4 +1,4 @@
-// app/api/users/me/route.ts
+﻿// app/api/users/me/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { api, ApiError } from "../../api";
@@ -10,13 +10,12 @@ export async function GET() {
     .join('; ');
 
   try {
-    const { data, status } = await api.get("/users/current", { 
+    const { data, status } = await api.get("/users/current", {
       headers: { Cookie: cookieHeader },
     });
     return NextResponse.json(data, { status });
   } catch (error) {
     const err = error as ApiError;
-    console.error("GET /users/current error:", err.response?.status, err.response?.data);
     return NextResponse.json(
       { error: err.response?.data?.error ?? err.message },
       { status: err.response?.status || 500 }
@@ -32,7 +31,7 @@ export async function PATCH(req: NextRequest) {
 
   const body = await req.json();
   try {
-    const { data, status, headers } = await api.patch("/users/me", body, { // ← без /api
+    const { data, status, headers } = await api.patch("/users/me", body, {
       headers: { Cookie: cookieHeader },
     });
     const res = NextResponse.json(data, { status });

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { api, ApiError } from "../../api";
 
@@ -16,11 +16,6 @@ export async function GET() {
     return NextResponse.json(data, { status });
   } catch (error) {
     const err = error as ApiError;
-    console.error(
-      "GET /users/current error:",
-      err.response?.status,
-      err.response?.data,
-    );
 
     return NextResponse.json(
       { error: err.response?.data?.error ?? err.message },
