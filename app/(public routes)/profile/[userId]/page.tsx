@@ -196,7 +196,11 @@ export default async function ProfilePage({ params }: PageProps) {
 
       const normalizedRegionName = rawRegion ? findRegionLabel(rawRegion, regions) : '';
       const normalizedTypeName = rawType ? findTypeLabel(rawType, types) : '';
-      const details = location._id ? await getLocationById(String(location._id)) : null;
+      const detailsResult = location._id ? await getLocationById(String(location._id)) : null;
+      const details =
+        detailsResult && typeof detailsResult === 'object'
+          ? (detailsResult as Record<string, unknown>)
+          : null;
 
       const finalTypeLabel = findTypeLabel(
         String(details?.locationTypeName || normalizedTypeName || rawType || ''),
@@ -216,7 +220,7 @@ export default async function ProfilePage({ params }: PageProps) {
             : String(details?.description || ''),
         region: details?.region || rawRegion,
         type: details?.type || rawType,
-        image: details?.image || toDataImage(rawImage),
+        image: String(details?.image || toDataImage(rawImage)),
         images: Array.isArray(location.images)
           ? location.images.filter((item): item is string => typeof item === 'string')
           : undefined,
