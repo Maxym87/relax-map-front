@@ -11,7 +11,7 @@ export async function POST() {
 
   await api.post(
     "/auth/logout",
-    {}, // body пустой
+    {}, 
     {
       headers: {
 
