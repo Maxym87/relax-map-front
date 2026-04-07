@@ -22,7 +22,7 @@ export default function Footer() {
               rel="noopener noreferrer"
             >
               <Image
-                src="/img/facebook.svg"
+                src="/img/Facebook.svg"
                 alt="Facebook"
                 width={24}
                 height={24}
@@ -35,7 +35,7 @@ export default function Footer() {
               rel="noopener noreferrer"
             >
               <Image
-                src="/img/instagram.svg"
+                src="/img/Instagram.svg"
                 alt="Instagram"
                 width={24}
                 height={24}
@@ -52,7 +52,7 @@ export default function Footer() {
               rel="noopener noreferrer"
             >
               <Image
-                src="/img/youtube.svg"
+                src="/img/Youtube.svg"
                 alt="Youtube"
                 width={24}
                 height={24}
