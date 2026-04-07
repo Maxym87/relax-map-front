@@ -3,6 +3,7 @@ import type {
   User,
   Feedback,
   FeedbacksResponse,
+  Location,
   LocationType,
   Region,
 } from '@/types/types';
@@ -135,11 +136,39 @@ const getTypeLabel = (location: Record<string, unknown>) => {
   return '';
 };
 
-const normalizeLocation = (location: Record<string, unknown>) => ({
-  ...location,
-  regionName: getRegionLabel(location),
-  locationTypeName: getTypeLabel(location),
+const normalizeLocation = (location: Record<string, unknown>): Location => ({
+  _id: String(location._id || ''),
+  name: String(location.name || ''),
+  description: typeof location.description === 'string' ? location.description : '',
+  region:
+    typeof location.region === 'string'
+      ? location.region
+      : (location.region as Region | string),
+  type:
+    typeof location.type === 'string'
+      ? location.type
+      : typeof location.locationType === 'string'
+        ? location.locationType
+        : (location.type as LocationType | string),
+  image:
+    typeof location.image === 'string'
+      ? location.image
+      : Array.isArray(location.images) && typeof location.images[0] === 'string'
+        ? location.images[0]
+        : undefined,
+  images: Array.isArray(location.images)
+    ? location.images.filter((item): item is string => typeof item === 'string')
+    : undefined,
   rate: Number(location.rate ?? location.rating ?? 0),
+  rating: Number(location.rating ?? location.rate ?? 0),
+  regionName: getRegionLabel(location),
+  locationType:
+    typeof location.locationType === 'string'
+      ? location.locationType
+      : typeof location.type === 'string'
+        ? location.type
+        : undefined,
+  locationTypeName: getTypeLabel(location),
 });
 
 const sortLocations = (items: Array<Record<string, unknown>>, sort?: string) => {
@@ -213,11 +242,14 @@ const fetchLocationsSource = async (params: FetchLocationsParams) => {
   return sourceItems;
 };
 
-export const fetchLocations = async (params: FetchLocationsParams) => {
+export const fetchLocations = async (params: FetchLocationsParams): Promise<{
+  items: Location[];
+  hasNextPage: boolean;
+}> => {
   await ensureCategoriesCache();
   const sourceItems = await fetchLocationsSource(params);
   const sortedItems = sortLocations(sourceItems, params.sort);
-  const items = sortedItems.map((location: Record<string, unknown>) =>
+  const items: Location[] = sortedItems.map((location: Record<string, unknown>) =>
     normalizeLocation(location),
   );
 
@@ -273,7 +305,8 @@ export const clientUserService = {
     try {
       const res = await nextServer.get('/api/users/me');
       return res.data;
-    } catch {
+    } catch (error) {
+      console.error('Client API Error (getCurrentUser):', error);
       return null;
     }
   },
@@ -281,7 +314,8 @@ export const clientUserService = {
     try {
       const res = await api.get(`/users/${userId}`);
       return res.data;
-    } catch {
+    } catch (error) {
+      console.error(`Client API Error (getUserById ${userId}):`, error);
       return null;
     }
   },
@@ -293,8 +327,8 @@ export const clientUserService = {
       if (Array.isArray(items) && items.length > 0) {
         return res.data;
       }
-    } catch {
-      //
+    } catch (error) {
+      console.error(`Client API Error (getUserLocations primary ${userId}):`, error);
     }
 
     try {
@@ -304,8 +338,8 @@ export const clientUserService = {
       if (Array.isArray(items) && items.length > 0) {
         return fallbackRes.data;
       }
-    } catch {
-      //
+    } catch (error) {
+      console.error(`Client API Error (getUserLocations fallback ${userId}):`, error);
     }
 
     try {
@@ -335,7 +369,8 @@ export const clientUserService = {
           limit: filteredLocations.length || 0,
         },
       };
-    } catch {
+    } catch (error) {
+      console.error(`Client API Error (getUserLocations local filter ${userId}):`, error);
       return { data: { data: [], totalItems: 0 } };
     }
   },
@@ -376,7 +411,7 @@ export const clientLocationService = {
   },
 };
 
-const fetchLocationsInternal = async (params: FetchLocationsParams) => {
+const fetchLocationsInternal = async (params: FetchLocationsParams): Promise<Location[]> => {
   await ensureCategoriesCache();
   const sourceItems = await fetchLocationsSource(params);
   return sortLocations(sourceItems, params.sort).map((location: Record<string, unknown>) =>

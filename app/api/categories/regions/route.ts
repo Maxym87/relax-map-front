@@ -7,7 +7,8 @@ export async function GET() {
     const response = await fetch(`${BASE_URL}/categories/regions`, { cache: 'no-store' });
     const data = await response.json();
     return NextResponse.json(data, { status: response.status });
-  } catch {
+  } catch (error) {
+    console.error('Failed to fetch region categories:', error);
     return NextResponse.json({ message: 'Server error' }, { status: 500 });
   }
 }

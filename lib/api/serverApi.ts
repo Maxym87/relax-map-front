@@ -73,7 +73,9 @@ const normalizeLocationDetails = async (
     try {
       const userRes = await api.get(`/users/${ownerId}`);
       authorName = userRes.data?.data?.name ?? userRes.data?.name ?? '';
-    } catch {}
+    } catch (error) {
+      console.error(`Server API Error (author lookup ${ownerId}):`, error);
+    }
   }
 
   const rawRegion =
@@ -120,7 +122,9 @@ export const getFeedbacks = async () => {
     if (feedbacks.length > 0) {
       return feedbacks;
     }
-  } catch {}
+  } catch (error) {
+    console.error('Server API Error (getFeedbacks primary):', error);
+  }
 
   try {
     const fallbackRes = await api.get('/feedbacks', {
@@ -128,7 +132,8 @@ export const getFeedbacks = async () => {
     });
 
     return normalizeFeedbacks(fallbackRes.data);
-  } catch {
+  } catch (error) {
+    console.error('Server API Error (getFeedbacks fallback):', error);
     return [];
   }
 };
@@ -142,7 +147,8 @@ export const getLocationFeedbacks = async (locationId: string): Promise<Feedback
       ...f,
       id: f._id,
     }));
-  } catch {
+  } catch (error) {
+    console.error(`Server API Error (getLocationFeedbacks primary ${locationId}):`, error);
     try {
       const [locationsRes, feedbacksRes] = await Promise.all([
         api.get('/locations', { params: { page: 1, limit: 1000 } }),
@@ -171,7 +177,8 @@ export const getLocationFeedbacks = async (locationId: string): Promise<Feedback
       const allFeedbacks = normalizeFeedbacks(feedbacksRes.data);
 
       return allFeedbacks.filter((feedback) => feedbackIds.includes(feedback._id));
-    } catch {
+    } catch (error) {
+      console.error(`Server API Error (getLocationFeedbacks fallback ${locationId}):`, error);
       return [];
     }
   }
@@ -181,7 +188,8 @@ export const getLocationById = async (locationId: string) => {
   try {
     const res = await api.get(`/locations/${locationId}`);
     return await normalizeLocationDetails(res.data.data);
-  } catch {
+  } catch (error) {
+    console.error(`Server API Error (getLocationById primary ${locationId}):`, error);
     try {
       const fallbackRes = await api.get('/locations', {
         params: { page: 1, limit: 1000 },
@@ -193,7 +201,8 @@ export const getLocationById = async (locationId: string) => {
       );
 
       return await normalizeLocationDetails(location);
-    } catch {
+    } catch (error) {
+      console.error(`Server API Error (getLocationById fallback ${locationId}):`, error);
       return null;
     }
   }
@@ -210,7 +219,8 @@ export const serverUserService = {
         headers: { Cookie: cookieHeader },
       });
       return res.data;
-    } catch {
+    } catch (error) {
+      console.error('Server API Error (getCurrentUser):', error);
       return null;
     }
   },
@@ -218,7 +228,8 @@ export const serverUserService = {
     try {
       const res = await api.get(`/users/${userId}`);
       return res.data;
-    } catch {
+    } catch (error) {
+      console.error(`Server API Error (getUserById ${userId}):`, error);
       return null;
     }
   },
@@ -230,8 +241,8 @@ export const serverUserService = {
       if (Array.isArray(items) && items.length > 0) {
         return res.data;
       }
-    } catch {
-      //
+    } catch (error) {
+      console.error(`Server API Error (getUserLocations primary ${userId}):`, error);
     }
 
     try {
@@ -241,8 +252,8 @@ export const serverUserService = {
       if (Array.isArray(items) && items.length > 0) {
         return fallbackRes.data;
       }
-    } catch {
-      //
+    } catch (error) {
+      console.error(`Server API Error (getUserLocations fallback ${userId}):`, error);
     }
 
     try {
@@ -272,7 +283,8 @@ export const serverUserService = {
           limit: filteredLocations.length || 0,
         },
       };
-    } catch {
+    } catch (error) {
+      console.error(`Server API Error (getUserLocations local filter ${userId}):`, error);
       return { data: { data: [], totalItems: 0 } };
     }
   },
