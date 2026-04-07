@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -77,7 +77,7 @@ export default function LocationsPageClient() {
           sort: selectedSort || undefined,
         });
 
-        setLocations(data.items || []);
+        setLocations(data.items);
         setHasNextPage(Boolean(data.hasNextPage));
       } catch (error) {
         console.error("Failed to fetch locations:", error);
@@ -105,7 +105,7 @@ export default function LocationsPageClient() {
         sort: selectedSort || undefined,
       });
 
-      setLocations((prev) => [...prev, ...(data.items || [])]);
+      setLocations((prev) => [...prev, ...data.items]);
       setCurrentPage(nextPage);
       setHasNextPage(Boolean(data.hasNextPage));
       setTimeout(() => {

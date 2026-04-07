@@ -4,9 +4,7 @@ import { isAxiosError } from "axios";
 
 export async function GET() {
   try {
-
-    const apiRes = await api.get("/api/categories/location-types");
-
+    const apiRes = await api.get("/categories/location-types");
 
     return NextResponse.json(apiRes.data);
   } catch (error) {
