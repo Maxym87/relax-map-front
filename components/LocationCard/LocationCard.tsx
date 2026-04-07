@@ -7,7 +7,7 @@ import StarRating from "../ui/star-rating";
 type LocationCardProps = {
   location: Location;
 };
-
+ 
 export default function LocationCard({ location }: LocationCardProps) {
   return (
     <article className={css.card}>
