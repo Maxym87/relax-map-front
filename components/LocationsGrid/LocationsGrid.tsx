@@ -7,7 +7,7 @@ type LocationsGridProps = {
   isLoading: boolean;
   isLoadingMore: boolean;
   hasNextPage: boolean;
-  scrollTargetIndex: number | null;
+  scrollTargetIndex?: number | null;
   onLoadMore: () => void;
 };
 
@@ -16,7 +16,7 @@ export default function LocationsGrid({
   isLoading,
   isLoadingMore,
   hasNextPage,
-  scrollTargetIndex,
+  scrollTargetIndex = null,
   onLoadMore,
 }: LocationsGridProps) {
   if (isLoading) {
