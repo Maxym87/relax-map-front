@@ -1,22 +1,19 @@
 .footer {
-  width: 100%;
-  min-height: 436px;
+  height: 436px;
   padding: 48px 20px;
   background: #FFE5D9;
   color: #4C2613;
-  overflow-x: clip;
 }
 
 /*  container */
 .container {
-  width: 100%;
-  max-width: 1440px;
+
   display: flex;
   flex-direction: column;
   gap: 24px;
+  display: flex;
   align-items: center;
   text-align: center;
-  margin: 0 auto;
 }
 
 .content {
@@ -113,7 +110,7 @@
 /*  Tablet */
 @media screen and (min-width: 768px) {
   .footer {
-    min-height: 274px;
+    height: 274px;
     padding: 48px 32px;
   }
 
@@ -173,12 +170,14 @@
 /*  Desktop */
 @media screen and (min-width: 1440px) {
   .footer {
-    min-height: 283px;
+    height: 283px;
     padding: 80px 64px;
   }
 
   .container {
+    max-width: 1440px;
     display: flex;
+    margin: 0 auto;
     justify-content: space-between;
     align-items: flex-start;
   }

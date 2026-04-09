@@ -1,6 +1,5 @@
 ﻿"use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -104,18 +103,11 @@ export default function PopularLocations() {
             {locations.map((location: PopularLocation) => (
               <SwiperSlide key={location._id} className={css.slide}>
                 <div className={css.locationCard}>
-                  {location.image ? (
-                    <Image
-                      src={location.image}
-                      alt={location.name}
-                      width={420}
-                      height={280}
-                      className={css.cardImage}
-                      unoptimized={location.image.startsWith("data:image/")}
-                    />
-                  ) : (
-                    <div className={css.cardImagePlaceholder}>Без зображення</div>
-                  )}
+                  <img
+                    src={location.image}
+                    alt={location.name}
+                    className={css.cardImage}
+                  />
                   <div className={css.cardContent}>
                     <p className={css.category}>
                       {location.locationTypeName ?? location.locationType}
