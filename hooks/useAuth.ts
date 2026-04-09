@@ -1,44 +1,37 @@
 "use client";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getSession } from "../lib/api/auth";
+import { getCurrentUser } from "../lib/api/auth";
 import { nextServer } from "../lib/api/api";
 import { User } from "../types/types";
 
 export const useAuth = () => {
   const queryClient = useQueryClient();
+  
+  const { data, isLoading, isError } = useQuery<User | null>({
+  queryKey: ["currentUser"],
+  queryFn: getCurrentUser,
+  retry: false,
+});
 
-  const { data, isLoading, isError } = useQuery<{
-    authenticated: boolean;
-    user: User | null;
-  }>({
-    queryKey: ["authSession"],
-    queryFn: getSession,
-    retry: false,
-    staleTime: 5 * 60 * 1000,
-  });
-
-  const normalizedUser = data?.user
+  const normalizedUser = data
     ? {
-        ...data.user,
-        id: data.user.id || data.user._id || "",
+        ...data,
+        id: data.id || data._id || "",
       }
     : null;
-
-  const logout = async () => {
+  
+const logout = async () => {
     await nextServer.post("/api/auth/logout");
-    queryClient.setQueryData(["authSession"], {
-      authenticated: false,
-      user: null,
-    });
-    await queryClient.invalidateQueries({ queryKey: ["authSession"] });
+    queryClient.setQueryData(["currentUser"], null);
+    await queryClient.invalidateQueries({ queryKey: ["currentUser"] });
   };
-
+  
   return {
     user: normalizedUser,
-    isAuthenticated: Boolean(data?.authenticated && normalizedUser),
+    isAuthenticated: !!normalizedUser,
     isLoading,
     isError,
-    logout,
+    logout
   };
 };

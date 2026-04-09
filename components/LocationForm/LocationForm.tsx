@@ -1,6 +1,5 @@
 ﻿'use client';
 
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
@@ -154,7 +153,8 @@ export default function LocationForm({
 
         setTypes(locationTypes || []);
         setRegions(regionsData || []);
-      } catch {
+      } catch (error) {
+        console.error('Failed to load location form options:', error);
       }
     };
 
@@ -220,13 +220,10 @@ export default function LocationForm({
 
             <div className={css.previewWrapper}>
               {preview ? (
-                <Image
+                <img
                   src={preview}
                   alt="Попередній перегляд"
-                  width={240}
-                  height={240}
                   className={css.previewImage}
-                  unoptimized
                 />
               ) : (
                 <div className={css.placeholder}>
