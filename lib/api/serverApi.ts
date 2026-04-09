@@ -1,4 +1,5 @@
-﻿import { api } from './api';
+﻿import { isAxiosError } from 'axios';
+import { api } from './api';
 import { cookies } from 'next/headers';
 import type { Feedback, FeedbacksResponse, LocationType, Region } from '@/types/types';
 import { findRegionLabel, findTypeLabel } from '@/lib/locationDisplay';
@@ -187,29 +188,71 @@ const normalizeLocationDetails = async (
   };
 };
 
-export const getFeedbacks = async () => {
+export const getFeedbacks = async (): Promise<Feedback[]> => {
   try {
-    const res = await api.get('/feedback', {
-      params: { perPage: 10 },
+    const res = await api.get('/locations', {
+      params: { page: 1, limit: 100 },
     });
 
-    const feedbacks = await normalizeFeedbacks(res.data);
+    const locations = Array.isArray(res.data?.data) ? res.data.data : [];
+    const embeddedFeedbacks = locations.flatMap((location: Record<string, unknown>) => {
+      const rawFeedbacks = Array.isArray(location.feedbacksId) ? location.feedbacksId : [];
+      const locationType =
+        typeof location.locationType === 'string'
+          ? location.locationType
+          : typeof location.type === 'string'
+            ? location.type
+            : '';
 
-    if (feedbacks.length > 0) {
-      return feedbacks;
+      return rawFeedbacks
+        .filter(
+          (feedback): feedback is Record<string, unknown> =>
+            !!feedback &&
+            typeof feedback === 'object' &&
+            '_id' in feedback &&
+            'rate' in feedback &&
+            'userName' in feedback,
+        )
+        .map((feedback) => ({
+          _id: String(feedback._id),
+          id: String(feedback._id),
+          rate: Number(feedback.rate ?? 0),
+          description:
+            typeof feedback.description === 'string' ? feedback.description : '',
+          userName:
+            typeof feedback.userName === 'string' ? feedback.userName : '',
+          locationId:
+            typeof feedback.locationId === 'string'
+              ? feedback.locationId
+              : typeof location._id === 'string'
+                ? location._id
+                : undefined,
+          locationType:
+            typeof feedback.locationType === 'string'
+              ? feedback.locationType
+              : locationType,
+        }));
+    });
+
+    const uniqueFeedbacks = embeddedFeedbacks.filter(
+      (feedback: Feedback, index: number, items: Feedback[]) =>
+        items.findIndex((candidate) => candidate._id === feedback._id) === index,
+    );
+
+    return await normalizeFeedbacks({
+      feedbacks: uniqueFeedbacks.slice(0, 10),
+    });
+  } catch (error) {
+    if (isAxiosError(error)) {
+      console.error('Server API Error (getFeedbacks via /locations):', {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message,
+      });
+    } else {
+      console.error('Server API Error (getFeedbacks via /locations):', error);
     }
-  } catch (error) {
-    console.error('Server API Error (getFeedbacks primary):', error);
-  }
 
-  try {
-    const fallbackRes = await api.get('/feedbacks', {
-      params: { perPage: 10 },
-    });
-
-    return await normalizeFeedbacks(fallbackRes.data);
-  } catch (error) {
-    console.error('Server API Error (getFeedbacks fallback):', error);
     return [];
   }
 };

@@ -3,14 +3,6 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
-  async rewrites() {
-    return [
-      {
-        source: "/api/:path*",
-        destination: "https://relax-map-back.onrender.com/api/:path*",
-      },
-    ];
-  },
   images: {
     remotePatterns: [
       {

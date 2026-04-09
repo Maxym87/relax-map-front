@@ -9,6 +9,8 @@ import type { Feedback } from '@/types/types';
 import { findRegionLabel, findTypeLabel } from '@/lib/locationDisplay';
 import css from './page.module.css';
 
+export const dynamic = 'force-dynamic';
+
 interface ToolDetailsPageProps {
   params: Promise<{ locationId: string }>;
 }

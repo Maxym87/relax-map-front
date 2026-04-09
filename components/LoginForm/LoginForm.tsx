@@ -29,7 +29,7 @@ export default function LoginForm() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("from");
+  const redirectTo = searchParams?.get("from");
 
   const handleSubmit = async (
     values: LoginData,

@@ -1,10 +1,11 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { api, ApiError } from '../api';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const { data, status } = await api.get('/feedback');
+    const params = Object.fromEntries(req.nextUrl.searchParams.entries());
+    const { data, status } = await api.get('/feedback', { params });
     return NextResponse.json(data, { status });
   } catch (error) {
     const err = error as ApiError;

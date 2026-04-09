@@ -1,6 +1,8 @@
 ﻿import { getLocationById } from '@/lib/api/serverApi';
 import LocationForm from '@/components/LocationForm/LocationForm';
 
+export const dynamic = 'force-dynamic';
+
 type EditLocationPageProps = {
   params: Promise<{
     locationId: string;

@@ -1,12 +1,10 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { api, ApiError } from '../../api';
+import { api, ApiError, backendApiBaseUrl } from '../../api';
 
 type RouteContext = {
   params: Promise<{ locationId: string }>;
 };
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const rebuildFormData = (incomingFormData: FormData) => {
   const outgoingFormData = new FormData();
@@ -22,7 +20,7 @@ const rebuildFormData = (incomingFormData: FormData) => {
   return outgoingFormData;
 };
 
-export async function GET(req: NextRequest, context: RouteContext) {
+export async function GET(_req: NextRequest, context: RouteContext) {
   try {
     const { locationId } = await context.params;
     const { data, status } = await api.get(`/locations/${locationId}`);
@@ -48,12 +46,13 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
 
   try {
     const { locationId } = await context.params;
-    if (!API_BASE_URL) {
+
+    if (!backendApiBaseUrl) {
       throw new Error('NEXT_PUBLIC_API_URL is not configured');
     }
 
     const formData = rebuildFormData(await req.formData());
-    const response = await fetch(`${API_BASE_URL}/locations/${locationId}`, {
+    const response = await fetch(`${backendApiBaseUrl}/locations/${locationId}`, {
       method: 'PATCH',
       headers: {
         Cookie: cookieHeader,

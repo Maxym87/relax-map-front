@@ -20,6 +20,7 @@ export interface RegisterData {
   name: string;
   email: string;
   password: string;
+  username?: string;
 }
 
 export type LoginData = {
@@ -275,11 +276,24 @@ export const fetchLocationTypes = async () => {
 
 export const register = async (data: RegisterData): Promise<User> => {
   try {
-    const response = await nextServer.post<User>('/api/auth/register', data);
+    const normalizedName = data.name.trim();
+    const normalizedEmail = data.email.trim().toLowerCase();
+    const normalizedPassword = data.password.trim();
+
+    const response = await nextServer.post<User>('/api/auth/register', {
+      name: normalizedName,
+      username: data.username?.trim() || normalizedName,
+      email: normalizedEmail,
+      password: normalizedPassword,
+    });
     return response.data;
   } catch (error) {
-    const err = error as AxiosError<{ error?: string }>;
-    throw new Error(err.response?.data?.error || 'Помилка реєстрації');
+    const err = error as AxiosError<{ error?: string; message?: string }>;
+    throw new Error(
+      err.response?.data?.message ||
+        err.response?.data?.error ||
+        'Не вдалося завершити реєстрацію. Спробуйте ще раз.',
+    );
   }
 };
 
@@ -298,6 +312,21 @@ export const getLocationFeedbacks = async (locationId: string): Promise<Feedback
     `/feedback/locations/${locationId}/feedbacks`,
   );
   return res.data?.feedbacks ?? [];
+};
+
+export const sendImageData = async (imageData: string) => {
+  try {
+    const response = await api.post('/image', { imageData });
+    return response.data;
+  } catch (error) {
+    const err = error as AxiosError<{ error?: string; message?: string }>;
+    throw new Error(
+      err.response?.data?.message ||
+        err.response?.data?.error ||
+        err.message ||
+        'Failed to send image data',
+    );
+  }
 };
 
 export const clientUserService = {

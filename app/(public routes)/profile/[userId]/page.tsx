@@ -1,10 +1,12 @@
 ﻿import ProfilePageContent from '@/components/Profile/ProfilePageContent';
 import { notFound } from 'next/navigation';
 import { api } from '@/lib/api/api';
-import { getLocationById, serverUserService } from '@/lib/api/serverApi';
+import { serverUserService } from '@/lib/api/serverApi';
 import { findRegionLabel, findTypeLabel } from '@/lib/locationDisplay';
 import type { LocationType, Region, Location } from '@/types/types';
 import { Metadata } from 'next';
+
+export const dynamic = 'force-dynamic';
 
 interface PageProps {
   params: Promise<{ userId: string }>;
@@ -210,42 +212,36 @@ export default async function ProfilePage({ params }: PageProps) {
 
       const normalizedRegionName = rawRegion ? findRegionLabel(rawRegion, regions) : '';
       const normalizedTypeName = rawType ? findTypeLabel(rawType, types) : '';
-      const detailsResult = location._id ? await getLocationById(String(location._id)) : null;
-      const details =
-        detailsResult && typeof detailsResult === 'object'
-          ? (detailsResult as Record<string, unknown>)
-          : null;
-
       const finalTypeLabel = findTypeLabel(
-        String(details?.locationTypeName || normalizedTypeName || rawType || ''),
+        String(normalizedTypeName || rawType || ''),
         types,
       );
       const finalRegionLabel = findRegionLabel(
-        String(details?.regionName || normalizedRegionName || rawRegion || ''),
+        String(normalizedRegionName || rawRegion || ''),
         regions,
       );
-      const resolvedRegion = isRegionLike(details?.region) ? details.region : rawRegion;
-      const resolvedType = isLocationTypeLike(details?.type) ? details.type : rawType;
+      const resolvedRegion = isRegionLike(location.region) ? location.region : rawRegion;
+      const resolvedType = isLocationTypeLike(location.type) ? location.type : rawType;
       const resolvedLocationType =
-        typeof details?.locationType === 'string' ? details.locationType : finalTypeLabel || rawType;
+        typeof location.locationType === 'string'
+          ? location.locationType
+          : finalTypeLabel || rawType;
 
       return {
-        _id: String(location._id || details?._id || ''),
-        name: String(location.name || details?.name || ''),
+        _id: String(location._id || ''),
+        name: String(location.name || ''),
         description:
           typeof location.description === 'string'
             ? location.description
-            : String(details?.description || ''),
+            : '',
         region: resolvedRegion,
         type: resolvedType,
-        image: String(details?.image || toDataImage(rawImage)),
+        image: toDataImage(rawImage),
         images: Array.isArray(location.images)
           ? location.images.filter((item): item is string => typeof item === 'string')
           : undefined,
-        rate: Number(location.rate ?? location.rating ?? details?.rate ?? details?.rating ?? 0),
-        rating: Number(
-          location.rating ?? location.rate ?? details?.rating ?? details?.rate ?? 0,
-        ),
+        rate: Number(location.rate ?? location.rating ?? 0),
+        rating: Number(location.rating ?? location.rate ?? 0),
         locationType: resolvedLocationType,
         locationTypeName: finalTypeLabel,
         regionName: finalRegionLabel,

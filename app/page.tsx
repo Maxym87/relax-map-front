@@ -6,6 +6,8 @@ import ReviewsBlock from "@/components/ReviewsBlock/ReviewsBlock";
 import { getFeedbacks } from "@/lib/api/serverApi";
 import css from "./Home.module.css";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const reviews = await getFeedbacks();
   return (

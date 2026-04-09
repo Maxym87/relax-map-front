@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { api, ApiError } from '../api';
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+import { api, ApiError, backendApiBaseUrl } from '../api';
 
 
 const rebuildFormData = (incomingFormData: FormData) => {
@@ -27,12 +25,12 @@ export async function POST(req: NextRequest) {
     .join('; ');
 
   try {
-    if (!API_BASE_URL) {
+    if (!backendApiBaseUrl) {
       throw new Error('NEXT_PUBLIC_API_URL is not configured');
     }
 
     const formData = rebuildFormData(await req.formData());
-    const response = await fetch(`${API_BASE_URL}/locations`, {
+    const response = await fetch(`${backendApiBaseUrl}/locations`, {
       method: 'POST',
       headers: {
         Cookie: cookieHeader,
@@ -63,9 +61,8 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   try {
-    const search = req.nextUrl.searchParams.toString();
-    const endpoint = search ? `/locations?${search}` : '/locations';
-    const { data, status } = await api.get(endpoint);
+    const params = Object.fromEntries(req.nextUrl.searchParams.entries());
+    const { data, status } = await api.get('/locations', { params });
     return NextResponse.json(data, { status });
   } catch (error) {
     const err = error as ApiError;

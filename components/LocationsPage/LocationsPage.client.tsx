@@ -15,6 +15,8 @@ import css from "./LocationsPage.module.css";
 export default function LocationsPageClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const paramsSnapshot = searchParams?.toString() ?? "";
+  const params = new URLSearchParams(paramsSnapshot);
 
   const [locations, setLocations] = useState<Location[]>([]);
   const [regions, setRegions] = useState<Region[]>([]);
@@ -26,22 +28,22 @@ export default function LocationsPageClient() {
   const [currentPage, setCurrentPage] = useState(1);
   const [scrollTargetIndex, setScrollTargetIndex] = useState<number | null>(null);
 
-  const searchValue = searchParams.get("search") || "";
-  const selectedRegion = searchParams.get("region") || "";
-  const selectedType = searchParams.get("type") || "";
-  const selectedSort = searchParams.get("sort") || "";
+  const searchValue = params.get("search") || "";
+  const selectedRegion = params.get("region") || "";
+  const selectedType = params.get("type") || "";
+  const selectedSort = params.get("sort") || "";
 
   const updateSearchParams = (key: string, value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
+    const nextParams = new URLSearchParams(paramsSnapshot);
 
     if (value) {
-      params.set(key, value);
+      nextParams.set(key, value);
     } else {
-      params.delete(key);
+      nextParams.delete(key);
     }
 
-    params.set("page", "1");
-    router.push(`/locations?${params.toString()}`);
+    nextParams.set("page", "1");
+    router.push(`/locations?${nextParams.toString()}`);
   };
 
   useEffect(() => {
