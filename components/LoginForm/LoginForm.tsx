@@ -2,6 +2,7 @@
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import type { FormikHelpers } from "formik";
+import { useQueryClient } from "@tanstack/react-query";
 import * as Yup from "yup";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
@@ -26,23 +27,34 @@ const validationSchema = Yup.object({
 
 export default function LoginForm() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("from") ?? "/";
+  const redirectTo = searchParams.get("from");
 
   const handleSubmit = async (
     values: LoginData,
     actions: FormikHelpers<LoginData>,
   ) => {
     try {
-      await login(values);
-      router.push(redirectTo);
+      const response = await login(values);
+      const userId = response.userId || response.user?._id || response.user?.id;
+
+      if (!userId) {
+        throw new Error('User ID не знайдено');
+      }
+
+      toast.success('Успішний вхід!');
+      await queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+      await queryClient.refetchQueries({ queryKey: ["currentUser"] });
+      const nextPath = redirectTo || `/profile/${userId}`;
+      router.replace(nextPath);
+      router.refresh();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Помилка входу");
     } finally {
       actions.setSubmitting(false);
     }
   };
-
   return (
     <Formik
       initialValues={initialValues}

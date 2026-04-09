@@ -1,19 +1,9 @@
-
-
 // lib/api/auth.ts
+import { nextServer } from "./api";
 
-import axios from "axios";
-
-
-const API_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
-//console.log("API_URL:", API_URL);  
-
-export const getCurrentUser = async (): Promise<User | null> => {
-  const res = await nextServer.get(`${API_URL}/api/users/current`, {
+export const getCurrentUser = async () => {
+  const res = await nextServer.get("/api/users/me", {
     withCredentials: true,
   });
-  //console.log("getCurrentUser response:", res);
-  return res.data;
-
+  return res.data?.data ?? res.data ?? null;
 };
-

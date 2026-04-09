@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef, useState } from "react";
 import css from "./FilterPanel.module.css";
-import { LocationType, Region } from "@/types";
+import { LocationType, Region } from "@/types/types";
 
 type FilterPanelProps = {
   regions: Region[];
@@ -44,7 +44,12 @@ export default function FilterPanel({
   }, []);
 
   const selectedTypeName =
-    types.find((type) => type._id === selectedType)?.type || "";
+    types.find(
+      (type) =>
+        type._id === selectedType ||
+        type.slug === selectedType ||
+        type.type === selectedType,
+    )?.type || "";
 
   return (
     <div className={css.wrapper}>
