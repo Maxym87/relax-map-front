@@ -42,10 +42,6 @@
   color: inherit;
 }
 
-.editButton {
-  width: fit-content;
-}
-
 .metaList {
   display: grid;
   gap: 8px;
