@@ -1,13 +1,16 @@
 .footer {
   height: 436px;
-  padding: 48px 20px;
+  padding: 48px 0;
   background: #FFE5D9;
   color: #4C2613;
 }
 
 /*  container */
 .container {
-
+  width: 100%;
+  max-width: 375px;
+  margin: 0 auto;
+  padding: 0 20px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -111,10 +114,12 @@
 @media screen and (min-width: 768px) {
   .footer {
     height: 274px;
-    padding: 48px 32px;
+    padding: 48px 0;
   }
 
   .container {
+    max-width: 768px;
+    padding: 0 32px;
     justify-content: space-between;
     align-items: flex-start;
   }
@@ -171,13 +176,13 @@
 @media screen and (min-width: 1440px) {
   .footer {
     height: 283px;
-    padding: 80px 64px;
+    padding: 80px 0;
   }
 
   .container {
     max-width: 1440px;
+    padding: 0 64px;
     display: flex;
-    margin: 0 auto;
     justify-content: space-between;
     align-items: flex-start;
   }
