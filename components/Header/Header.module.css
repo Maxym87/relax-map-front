@@ -4,10 +4,13 @@
 }
 
 .container {
+  width: 100%;
+  max-width: 375px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
+  padding: 12px 20px;
 }
 
 .logo {
@@ -210,6 +213,11 @@
 
 /* ***************************************** tablet */
 @media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+    padding: 12px 32px;
+  }
+
   .nav {
     display: flex;
     gap: 24px;
@@ -237,7 +245,7 @@
 @media (min-width: 1440px) {
   .container {
     max-width: 1440px;
-    margin: 0 auto;
+    padding: 12px 64px;
   }
   .mainlocations {
   display: flex; 

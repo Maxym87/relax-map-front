@@ -40,6 +40,22 @@ let regionsCache: Region[] | null = null;
 let locationTypesCache: LocationType[] | null = null;
 let categoriesPromise: Promise<void> | null = null;
 
+const toImageSrc = (value: unknown) => {
+  if (typeof value !== 'string' || !value.trim()) {
+    return undefined;
+  }
+
+  if (
+    value.startsWith('http://') ||
+    value.startsWith('https://') ||
+    value.startsWith('data:image/')
+  ) {
+    return value;
+  }
+
+  return `data:image/jpeg;base64,${value}`;
+};
+
 const extractRegions = (payload: unknown): Region[] => {
   const data = payload as
     | {
@@ -150,14 +166,11 @@ const normalizeLocation = (location: Record<string, unknown>): Location => ({
       : typeof location.locationType === 'string'
         ? location.locationType
         : (location.type as LocationType | string),
-  image:
-    typeof location.image === 'string'
-      ? location.image
-      : Array.isArray(location.images) && typeof location.images[0] === 'string'
-        ? location.images[0]
-        : undefined,
+  image: toImageSrc(location.image) ?? toImageSrc(Array.isArray(location.images) ? location.images[0] : undefined),
   images: Array.isArray(location.images)
-    ? location.images.filter((item): item is string => typeof item === 'string')
+    ? location.images
+        .map((item) => toImageSrc(item))
+        .filter((item): item is string => typeof item === 'string')
     : undefined,
   rate: Number(location.rate ?? location.rating ?? 0),
   rating: Number(location.rating ?? location.rate ?? 0),
@@ -273,9 +286,9 @@ export const fetchLocationTypes = async () => {
   return locationTypesCache;
 };
 
-export const register = async (data: RegisterData): Promise<User> => {
+export const register = async (data: RegisterData) => {
   try {
-    const response = await nextServer.post<User>('/api/auth/register', data);
+    const response = await nextServer.post('/api/auth/register', data);
     return response.data;
   } catch (error) {
     const err = error as AxiosError<{ error?: string }>;

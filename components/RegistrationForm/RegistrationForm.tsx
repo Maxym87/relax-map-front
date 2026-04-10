@@ -2,10 +2,12 @@
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import type { FormikHelpers } from "formik";
+import { useQueryClient } from "@tanstack/react-query";
 import * as Yup from "yup";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { register, type RegisterData } from "@/lib/api/clientApi";
+import { getCurrentUser } from "@/lib/api/auth";
 import styles from "./RegistrationForm.module.css";
 
 const initialValues: RegisterData = {
@@ -31,6 +33,7 @@ const validationSchema = Yup.object({
 
 export default function RegistrationForm() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("from") ?? "/";
 
@@ -39,8 +42,22 @@ export default function RegistrationForm() {
     actions: FormikHelpers<RegisterData>,
   ) => {
     try {
-      await register(values);
-      router.push(redirectTo);
+      const response = await register(values);
+      const userId = response.userId || response.user?._id || response.user?.id;
+
+      queryClient.setQueryData(["authSession"], true);
+      await queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+      const currentUserResult = await queryClient.fetchQuery({
+        queryKey: ["currentUser"],
+        queryFn: getCurrentUser,
+      });
+
+      const resolvedUserId =
+        userId || currentUserResult?.id || currentUserResult?._id;
+
+      toast.success("Реєстрація успішна!");
+      router.replace(redirectTo === "/" ? (resolvedUserId ? `/profile/${resolvedUserId}` : "/") : redirectTo);
+      router.refresh();
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : "Помилка реєстрації",

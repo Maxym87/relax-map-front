@@ -7,6 +7,14 @@
     justify-content: space-between;
 }
 
+.image {
+    width: 100%;
+}
+
+.location {
+    width: 100%;
+}
+
 @media screen and (min-width: 1440px) {
     .details {
         flex-direction: row;
