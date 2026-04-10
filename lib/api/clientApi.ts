@@ -273,9 +273,9 @@ export const fetchLocationTypes = async () => {
   return locationTypesCache;
 };
 
-export const register = async (data: RegisterData): Promise<User> => {
+export const register = async (data: RegisterData) => {
   try {
-    const response = await nextServer.post<User>('/api/auth/register', data);
+    const response = await nextServer.post('/api/auth/register', data);
     return response.data;
   } catch (error) {
     const err = error as AxiosError<{ error?: string }>;
