@@ -43,10 +43,12 @@
 .slide {
   display: flex;
   justify-content: center;
+  height: auto;
 }
 
 .locationCard {
   width: 100%;
+  height: 100%;
   border-radius: 12px;
   overflow: hidden;
   background-color: #ffe5d9;
@@ -74,6 +76,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  flex: 1;
 }
 
 .category {
@@ -109,6 +112,13 @@
   line-height: 150%;
   color: #0d0b0a;
   margin: 0;
+  min-height: calc(1.5em * 2);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cardButton {
@@ -125,7 +135,7 @@
     background-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
     border 250ms cubic-bezier(0.4, 0, 0.2, 1),
     color 250ms cubic-bezier(0.4, 0, 0.2, 1);
-  margin-top: 8px;
+  margin-top: auto;
 }
 
 .cardButton:hover {
