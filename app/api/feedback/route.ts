@@ -4,7 +4,9 @@ import { api, ApiError } from '../api';
 
 export async function GET() {
   try {
-    const { data, status } = await api.get('/feedback');
+    const { data, status } = await api.get('/feedback', {
+      params: { perPage: 10 },
+    });
     return NextResponse.json(data, { status });
   } catch (error) {
     const err = error as ApiError;

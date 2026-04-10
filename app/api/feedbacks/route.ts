@@ -5,7 +5,9 @@ import { cookies } from "next/headers";
 
 export async function GET() {
   try {
-    const apiRes = await api.get("/feedback");
+    const apiRes = await api.get("/feedback", {
+      params: { perPage: 10 },
+    });
     return NextResponse.json(apiRes.data, { status: apiRes.status });
   } catch (error) {
     if (isAxiosError(error)) {

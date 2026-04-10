@@ -192,24 +192,9 @@ export const getFeedbacks = async () => {
     const res = await api.get('/feedback', {
       params: { perPage: 10 },
     });
-
-    const feedbacks = await normalizeFeedbacks(res.data);
-
-    if (feedbacks.length > 0) {
-      return feedbacks;
-    }
+    return await normalizeFeedbacks(res.data);
   } catch (error) {
-    console.error('Server API Error (getFeedbacks primary):', error);
-  }
-
-  try {
-    const fallbackRes = await api.get('/feedbacks', {
-      params: { perPage: 10 },
-    });
-
-    return await normalizeFeedbacks(fallbackRes.data);
-  } catch (error) {
-    console.error('Server API Error (getFeedbacks fallback):', error);
+    console.error('Server API Error (getFeedbacks):', error);
     return [];
   }
 };
