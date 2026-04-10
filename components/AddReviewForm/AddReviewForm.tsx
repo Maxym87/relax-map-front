@@ -19,6 +19,7 @@ interface ReviewFormValues {
 
 interface CreateReviewPayload {
   locationId: string;
+  userName: string;
   description: string;
   rate: number;
 }
@@ -102,6 +103,7 @@ export default function AddReviewForm({ locationId, onCancel, onSuccess }: AddRe
     try {
       await createReview({
         locationId,
+        userName: user.name,
         description: values.description.trim(),
         rate: values.rate,
       });
