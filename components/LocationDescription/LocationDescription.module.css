@@ -14,7 +14,8 @@
 
 @media screen and (min-width: 768px) {
   .locationDescription {
-    width: 865px;
+    width: 100%;
+    max-width: 865px;
   }
   .text {
     font-size: 16px;
