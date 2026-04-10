@@ -8,6 +8,8 @@ type LocationInfoBlockProps = {
   type: string;
   authorId: string;
   authorName: string;
+  locationId: string;
+  isOwner: boolean;
   className?: string;
 };
 
@@ -18,6 +20,8 @@ export const LocationInfoBlock = ({
   type,
   authorId,
   authorName,
+  locationId,
+  isOwner,
   className,
 }: LocationInfoBlockProps) => {
   const hasRating = typeof rating === "number" && !Number.isNaN(rating);
@@ -63,6 +67,15 @@ export const LocationInfoBlock = ({
         <h1 id="location-title" className={styles.title}>
           {title}
         </h1>
+
+        {isOwner ? (
+          <Link
+            href={`/locations/${locationId}/edit`}
+            className={`secondary-btn ${styles.editButton}`}
+          >
+            Редагувати
+          </Link>
+        ) : null}
 
         {/* Meta */}
         <div className={styles.metaList}>
