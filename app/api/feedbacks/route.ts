@@ -33,21 +33,48 @@ export async function POST(req: Request) {
     const locationId =
       typeof body?.locationId === "string" ? body.locationId : undefined;
     const payload = {
+      locationId,
       description: body?.description,
-      rate: body?.rate,
+      rate: Number(body?.rate),
     };
 
     if (!locationId) {
       throw new Error("Location id is required");
     }
 
-    const apiRes = await api.post(
-      `/feedback/locations/${locationId}/feedbacks`,
-      payload,
-      {
+    if (!cookieHeader) {
+      return NextResponse.json(
+        {
+          error: "Unauthorized",
+          message: "Щоб залишити відгук, потрібно увійти в акаунт",
+        },
+        { status: 401 },
+      );
+    }
+
+    let apiRes;
+
+    try {
+      apiRes = await api.post("/feedback", payload, {
         headers: { Cookie: cookieHeader },
-      },
-    );
+      });
+    } catch (error) {
+      if (!isAxiosError(error) || ![404, 405].includes(error.response?.status ?? 0)) {
+        throw error;
+      }
+
+      apiRes = await api.post(
+        `/feedback/locations/${locationId}/feedbacks`,
+        {
+          description: payload.description,
+          rate: payload.rate,
+        },
+        {
+          headers: { Cookie: cookieHeader },
+        },
+      );
+    }
+
     return NextResponse.json(apiRes.data, { status: apiRes.status });
   } catch (error) {
     if (isAxiosError(error)) {
