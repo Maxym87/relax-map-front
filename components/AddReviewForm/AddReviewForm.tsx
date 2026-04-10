@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import css from './AddReviewForm.module.css';
+import { useAuth } from '@/hooks/useAuth';
 
 interface AddReviewFormProps {
   locationId: string;
@@ -88,11 +89,14 @@ async function createReview(payload: CreateReviewPayload): Promise<CreateReviewR
 export default function AddReviewForm({ locationId, onCancel, onSuccess }: AddReviewFormProps) {
   const [serverError, setServerError] = useState('');
   const [hoveredRating, setHoveredRating] = useState(0);
+  const { user } = useAuth();
 
   const handleSubmit = async (
     values: ReviewFormValues,
     actions: FormikHelpers<ReviewFormValues>,
   ): Promise<void> => {
+    if (!user) return;
+
     setServerError('');
 
     try {
