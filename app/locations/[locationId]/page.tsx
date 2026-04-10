@@ -37,9 +37,10 @@ export async function generateMetadata({ params }: ToolDetailsPageProps): Promis
 
 export default async function ToolDetailsPage({ params }: ToolDetailsPageProps) {
   const { locationId } = await params;
-  const [locationData, feedbacks] = await Promise.all([
+  const [locationData, feedbacks, currentUserResponse] = await Promise.all([
     getLocationById(locationId),
     getLocationFeedbacks(locationId),
+    serverUserService.getCurrentUser(),
   ]);
 
   if (!locationData) {
@@ -61,6 +62,12 @@ export default async function ToolDetailsPage({ params }: ToolDetailsPageProps) 
     getString(rawLocation.authorName) ||
     getString(authorResponse?.data?.name) ||
     getString(authorResponse?.name);
+  const currentUserId =
+    getString(currentUserResponse?.data?._id) ||
+    getString(currentUserResponse?.data?.id) ||
+    getString(currentUserResponse?._id) ||
+    getString(currentUserResponse?.id);
+  const isOwner = Boolean(currentUserId && authorId && currentUserId === authorId);
 
   const feedbackRefs = Array.isArray(rawLocation.feedbacksId)
     ? rawLocation.feedbacksId
@@ -124,6 +131,8 @@ export default async function ToolDetailsPage({ params }: ToolDetailsPageProps) 
             type={type}
             authorId={authorId}
             authorName={authorName}
+            locationId={locationId}
+            isOwner={isOwner}
           />
         </div>
 
